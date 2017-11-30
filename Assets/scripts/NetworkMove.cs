@@ -4,13 +4,19 @@ using UnityEngine;
 using Photon;
 
 public class NetworkMove : PunBehaviour{
-
+    
+    Multiplayer multiplayer;
     private Vector3 correctPlayerPos;
     private Quaternion correctPlayerRot;
 
     // Update is called once per frame
+
+   
+    void Start() {
+        multiplayer = FindObjectOfType<Multiplayer>();
+    }
     void Update() {
-        if (!photonView.isMine) {
+        if (multiplayer.turn == Multiplayer.Turn.local && !PhotonNetwork.isMasterClient ) {
             transform.position = Vector3.Lerp(transform.position, correctPlayerPos, Time.deltaTime * 5);
             transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot, Time.deltaTime * 5);
         }
@@ -18,17 +24,11 @@ public class NetworkMove : PunBehaviour{
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
 
-        Debug.Log("Entered in Serialize view");
         if (stream.isWriting) {
-            Debug.Log("Writing Data");
-            // We own this player: send the others our data
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
         }
         else {
-
-            Debug.Log("Reading Data");
-            // Network player, receive data
             correctPlayerPos = (Vector3)stream.ReceiveNext();
             correctPlayerRot = (Quaternion)stream.ReceiveNext();
         }
