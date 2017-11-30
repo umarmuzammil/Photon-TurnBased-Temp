@@ -32,13 +32,15 @@ public class Multiplayer : PunBehaviour {
         PhotonNetwork.CreateRoom(null);
     }
 
-    public override void OnJoinedLobby() {
+    public override void OnJoinedLobby() {                
         PhotonNetwork.JoinRandomRoom();
     }
     public override void OnJoinedRoom() {
         if(PhotonNetwork.isMasterClient) {
-            turn = Turn.local;
-            StartTurn();
+            if (PhotonNetwork.room.PlayerCount == 2) {
+                turn = Turn.local;
+                StartTurn();
+            }
         }                            
     }      
 
