@@ -19,6 +19,14 @@ public class Multiplayer : PunBehaviour {
         PhotonNetwork.logLevel = PhotonLogLevel.Full;
     }
     void Update() {
+        if (!PhotonNetwork.isMasterClient)
+            return;
+
+        if (PhotonNetwork.room.PlayerCount == 2) {
+            turn = Turn.local;
+            StartTurn();
+
+        }
     }
 
     void OnGUI() {
@@ -35,14 +43,7 @@ public class Multiplayer : PunBehaviour {
     public override void OnJoinedLobby() {                
         PhotonNetwork.JoinRandomRoom();
     }
-    public override void OnJoinedRoom() {
-        if (PhotonNetwork.room.PlayerCount == 2) {            
-            turn = Turn.local;
-            StartTurn();
-            //if (PhotonNetwork.isMasterClient) { 
-            //  turn = Turn.local;                
-            //}
-        }                            
+    public override void OnJoinedRoom() {                   
     }      
 
     void StartTurn() {

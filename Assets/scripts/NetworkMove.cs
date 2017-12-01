@@ -15,14 +15,14 @@ public class NetworkMove : PunBehaviour{
     void Start() {
         multiplayer = FindObjectOfType<Multiplayer>();
     }
-    void Update() {        
-        if (!photonView.isMine ) {
+    void Update() {
+        if (multiplayer.turn == Multiplayer.Turn.local && !PhotonNetwork.isMasterClient) {
             transform.position = Vector3.Lerp(transform.position, correctPlayerPos, Time.deltaTime * 5);
             transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot, Time.deltaTime * 5);
         }
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
         Debug.Log("FIRED");
         if (stream.isWriting) {
 
