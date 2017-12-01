@@ -16,7 +16,7 @@ public class NetworkMove : PunBehaviour{
         multiplayer = FindObjectOfType<Multiplayer>();
     }
     void Update() {
-        if (multiplayer.turn == Multiplayer.Turn.local && !PhotonNetwork.isMasterClient ) {
+        if (!photonView.isMine ) {
             transform.position = Vector3.Lerp(transform.position, correctPlayerPos, Time.deltaTime * 5);
             transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot, Time.deltaTime * 5);
         }

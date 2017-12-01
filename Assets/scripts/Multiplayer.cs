@@ -10,7 +10,7 @@ public class Multiplayer : PunBehaviour {
         local, remote
     }
 
-    public Turn turn = Turn.local;
+    public Turn turn;
             
     // Use this for initialization
     void Start() {
@@ -36,19 +36,24 @@ public class Multiplayer : PunBehaviour {
         PhotonNetwork.JoinRandomRoom();
     }
     public override void OnJoinedRoom() {
-        if (PhotonNetwork.room.PlayerCount == 2) {
-            StartTurn();
+        if (PhotonNetwork.room.PlayerCount == 2) {            
             turn = Turn.local;
-            if (PhotonNetwork.isMasterClient) { 
-                turn = Turn.local;                
-            }
+            StartTurn();
+            //if (PhotonNetwork.isMasterClient) { 
+            //  turn = Turn.local;                
+            //}
         }                            
     }      
 
     void StartTurn() {
         if(turn == Turn.local) {            
-            this.photonView.RPC("NetworkSpawn", PhotonTargets.All, null);
+            photonView.RPC("NetworkSpawn", PhotonTargets.All, null);
         }
+    }
+
+    [PunRPC]
+    public void SwitchTurn() {
+        turn = (turn == Turn.local) ? turn = Turn.remote : turn = Turn.local;       
     }
 
     [PunRPC]
