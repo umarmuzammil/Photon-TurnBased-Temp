@@ -36,10 +36,11 @@ public class Multiplayer : PunBehaviour {
         PhotonNetwork.JoinRandomRoom();
     }
     public override void OnJoinedRoom() {
-        if(PhotonNetwork.isMasterClient) {
-            if (PhotonNetwork.room.PlayerCount == 2) {
-                turn = Turn.local;
-                StartTurn();
+        if (PhotonNetwork.room.PlayerCount == 2) {
+            StartTurn();
+            turn = Turn.local;
+            if (PhotonNetwork.isMasterClient) { 
+                turn = Turn.local;                
             }
         }                            
     }      
