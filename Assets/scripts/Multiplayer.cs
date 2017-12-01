@@ -46,8 +46,9 @@ public class Multiplayer : PunBehaviour {
     }      
 
     void StartTurn() {
-        if(turn == Turn.local) {            
-            photonView.RPC("NetworkSpawn", PhotonTargets.All, null);
+        if(turn == Turn.local) {
+            int id1 = PhotonNetwork.AllocateViewID();  
+            photonView.RPC("NetworkSpawn", PhotonTargets.All, id1);
         }
     }
 
@@ -57,9 +58,11 @@ public class Multiplayer : PunBehaviour {
     }
 
     [PunRPC]
-    void NetworkSpawn() {
+    void NetworkSpawn(int id1) {
 
         Transform localPlayer = Instantiate(prefab, new Vector3(0, 0.5f, 0), Quaternion.identity).transform;
+        PhotonView[] nViews = localPlayer.GetComponentsInChildren<PhotonView>();
+        nViews[0].viewID = id1;
 
         if (turn == Turn.local && PhotonNetwork.isMasterClient) {
            localPlayer.GetComponent<PlayerController>().enabled = true;
